@@ -1,0 +1,7 @@
+仓库:
+- 仓库: https://github.com/psf/black
+  版本：22.3.0
+  钩子:
+    - id: 黑色
+      语言版本：python3.8
+      参数: [--检查]
