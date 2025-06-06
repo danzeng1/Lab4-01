@@ -5,7 +5,7 @@ description = "A simple graph implementation"
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"  # 关键修改点
+python = "^3.10"  # 关键修改点
 black = "^22.3.0"
 pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
