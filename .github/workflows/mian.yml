@@ -1,0 +1,32 @@
+name: Python CI/CD Pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4  # 也建议升级 checkout
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v5  # 建议升级 setup-python
+        with:
+          python-version: "3.8"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: Install dependencies
+        run: |
+          poetry install
+          poetry run pre-commit install
+      - name: Lint with Black
+        run: poetry run black --check .
+      - name: Run tests
+        run: poetry run pytest pygraph.py -rP --cov=pygraph
+      - name: Generate docs
+        run: poetry run pdoc --html pygraph --force
+      - name: Upload docs
+        uses: actions/upload-artifact@v4  # 关键修复：升级到 v4
+        with:
+          name: api-docs
+          path: html/pygraph
