@@ -1,28 +1,32 @@
-名称：Python CI/CD 流水线
-上：[推送， 拉取请求]
-工作输入：
-  构建:
-    运行于: ubuntu-latest
-    步骤:
-      - 用途：actions/checkout@v2
-      - 名称: 设置 Python 3.8
-        使用：actions/setup-python@v2
-        和:
+name: Python CI/CD Pipeline
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
           python-version: "3.8"
-      - 名称: 安装 Poetry
-        使用：snok/install-poetry@v1
-      - 名称: 安装依赖项
-        运行: |
-          诗歌安装
-          诗歌运行预提交安装
-      - 名称: 使用 Black 的代码检查
-        运行： poetry run black --check .
-      - 名称: 运行测试
-        运行： poetry run pytest pygraph.py -r P --cov=pygraph
-      - 名称: 生成文档
-        运行： poetry run pdoc --html pygraph --force
-      - 名称: 上传文件
-        使用：actions/upload-artifact@v2
-        和：
-          名称：api-文档
-          路径: html/
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+      - name: Install dependencies
+        run: |
+          poetry install
+          poetry run pre-commit install
+      - name: Lint with Black
+        run: poetry run black --check .
+      - name: Run tests
+        run: poetry run pytest pygraph.py -rP --cov=pygraph
+      - name: Generate docs
+        run: poetry run pdoc --html pygraph --force
+      - name: Upload docs
+        uses: actions/upload-artifact@v2
+        with:
+          name: api-docs
+          path: html/pygraph
