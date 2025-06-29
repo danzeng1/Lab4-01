@@ -1,0 +1,49 @@
+name: Python CI/CD Pipeline
+on: 
+  push:
+    branches: [main]  # 推送 main 分支时触发
+  pull_request:
+    branches: [main]  # PR 到 main 分支时触发
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 设置 Python 环境
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8"
+
+      # 3. 安装 Poetry
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          poetry config virtualenvs.in-project true  # 虚拟环境保存在项目内
+
+      # 4. 安装项目依赖
+      - name: Install dependencies
+        run: poetry install
+
+      # 5. 代码格式检查（Black）
+      - name: Check code format with Black
+        run: poetry run black --check .
+
+      # 6. 运行单元测试（Pytest）
+      - name: Run tests with Pytest
+        run: poetry run pytest tests/ -r P --cov=pygraph
+
+      # 7. 生成 API 文档（pdoc）
+      - name: Generate API documentation with pdoc
+        run: poetry run pdoc --html pygraph --output-dir html/
+
+      # 8. 上传文档产物（可选）
+      - name: Upload API docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: html/
