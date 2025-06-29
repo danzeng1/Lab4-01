@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "pygraph"
+version = "0.1.0"
+description = "A minimal graph data structure library"
+authors = ["Your Name <your-email@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.8"  # 指定 Python 3.8
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"    # 单元测试框架
+black = "^23.0.0"    # 代码格式化工具
+pre-commit = "^3.0.0"# Git 提交前钩子
+pdoc = "^0.10.0"     # API 文档生成工具
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
